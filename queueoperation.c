@@ -1,67 +1,118 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-int cqueue[100],maxsize,front=0,rear=0;
+#include <stdio.h>
+
 void enqueue();
 void dequeue();
 void peek();
+int isfull();
+int isempty();
+
+int queue[100], maxsize, front = -1, rear = -1;
+
 void main()
 {
-printf("Enter the queue size\n");
-scanf("%d", &maxsize);
-int choice;
-int element,i;
-do
+    int choice, item;
+    
+    printf("Enter the size of the queue: ");
+    scanf("%d", &maxsize);
+    
+    while(1)
+    {
+        
+        printf("\n--- Queue Operations Menu ---\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Peek\n");
+        printf("4. Check if full\n");
+        printf("5. Check if empty\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        
+        switch(choice)
+        {
+            case 1:
+                printf("Enter the element to enqueue: ");
+                scanf("%d", &item);
+                enqueue(item);
+                break;
+            case 2:
+                dequeue();
+                break;
+            case 3:
+                peek();
+                break;
+            case 4:
+                if(isfull())
+                    printf("Queue is full.\n");
+                else
+                    printf("Queue is not full.\n");
+                break;
+            case 5:
+                if(isempty())
+                    printf("Queue is empty.\n");
+                else
+                    printf("Queue is not empty.\n");
+                break;
+            case 6:
+                printf("Exiting program.\n");
+                return;
+            default:
+                printf("Invalid choice, please try again.\n");
+        }
+    }
+}
+
+
+void enqueue(int item)
 {
-printf("1.Enter 1 to see rear and front value of queue\n");
-printf("2.Enter 2 to insert an element in the queue\n");
-printf("3.Enter 3 to delete an element from the queue\n");
-scanf("%d",&i);
-switch(i)
-{
-case 1:peek();
-break;
-case 2:printf("\nEnter the elements to be inserted\n");
-scanf("%d",&element);
-enqueue(element);
-break;
-case 3:dequeue();
-break;
-default:printf("\nEntered the wrong choice\n");
+    if(isfull())
+        printf("Queue is full! Cannot enqueue.\n");
+    else
+    {
+        if(front == -1) 
+            front = 0;
+        rear++;
+        queue[rear] = item;
+        printf("Enqueued %d\n", item);
+    }
 }
-printf("\nDo you want to continue(1/2)\n");
-scanf("%d", &choice);
-}
-while(choice==1);
-}
-void enqueue(int data)
-{
-if(rear==maxsize-1)
-{
-printf("Sorry,The circular queue is full cannot insert\n");
-exit(0);
-}
-else
-{
-cqueue[rear]=data;
-rear=rear+1;
-}
-}
+
+
 void dequeue()
 {
-if(front==-1)
-{
-printf("The circular queue is empty\n");
-exit(0);
+    if(isempty())
+        printf("Queue is empty! Cannot dequeue.\n");
+    else
+    {
+        printf("Dequeued %d\n", queue[front]);
+        front++;
+        if(front > rear) 
+        {
+            front = rear = -1;
+        }
+    }
 }
-else
-{
-printf("The deleted element is %d \n",cqueue[front]);
-front=front+1;
-}
-}
+
+
 void peek()
 {
-printf("The front value is %d \n",front);
-printf("The rear value is %d \n",rear);
+    if(isempty())
+        printf("Queue is empty! No elements to peek.\n");
+    else
+        printf("Front element is %d\n", queue[front]);
+}
+
+
+int isfull()
+{
+    if(rear == maxsize - 1)
+        return 1; 
+    return 0;
+}
+
+int isempty()
+{
+    if(front == -1)
+        return 1; 
+    return 0;
 }
